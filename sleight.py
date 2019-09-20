@@ -150,62 +150,6 @@ def convert_profile():
     print rules
     return rules
 
-def get_apache():
-
-    # Install Apache
-    if not os.path.isdir('/etc/apache2/'):
-        install = raw_input(
-            (G + '[+]' + W + ' Apache installation not found' +
-             ' in /etc/apache2/. Install now? [y/N] ')
-        )
-        if install == 'y':
-            print '\n' + T + '[*]' + W + ' Installing Apache...\n'
-            subprocess.call(['apt-get', 'update','-y'])
-            subprocess.call(['apt-get','install','apache2','-y'])
-            print LG + '\n[!]' + W + ' Apache installed.'
-        else:
-            sys.exit((R + '[!]' + W + ' Exiting. Apache' +
-                     ' not installed.'))
-
-"""
-def get_https_cert():
-
-    # Generate HTTPS certificate
-    print '\n' + T + '[*]' + W + ' Generating Let\'s Encrypt HTTPS certificate...'
-
-    if not args.myDomain:
-        domain = raw_input(
-            '\n' + G + '[+]' + W + ' Redirector domain (e.g. example.com): ')
-        while domain == '':
-            domain = raw_input("[-] Redirector domain (e.g. example.com): ")
-    else:
-		domain = args.myDomain
-    print '\n' + T + '[*]' + W + ' Runnning certbot. This might take some time...\n'
-    if not os.path.isfile("./certbot-auto"):
-    	subprocess.call(['wget', 'https://dl.eff.org/certbot-auto'])
-    subprocess.call(['chmod', 'a+x', './certbot-auto'])
-    subprocess.call(['service', 'apache2', 'stop'])
-# TODO: add sub domain enumeration here, so news,images,www,static can be fed as a CLI arg and the array is parsed as multiple -d options.
-    if args.proceed:
-        subprocess.call(['./certbot-auto', 'certonly', '--standalone', '-d', \
-    	str(domain), '-d', 'www.'+str(domain), '--register-unsafely-without-email', '--agree-tos', '--non-interactive'])
-
-    else:
-        subprocess.call(['./certbot-auto', 'certonly', '--standalone', '-d', \
-    	str(domain), '-d', 'www.'+str(domain)])
-
-    cert_dir = '/etc/letsencrypt/live/'+str(domain)
-    if not os.path.isdir(str(cert_dir)):
-    	print '\n' + R + '[!]' + W + ' HTTPS certificate for ' \
-    	+ T + str(domain) + W + ' not generated.'
-    	sys.exit((R + '[!]' + W + ' Exiting. HTTPS certificate' +
-    		' generation failed.'))
-    else:
-		print LG + '\n[!]' + W + ' HTTPS certificate for ' \
-    	+ T + str(domain) + W + ' successfully generated.'
-
-    return domain
-"""
 def mod_rewrite_config(rules):
 
 	# Backup Apache config file
@@ -230,7 +174,6 @@ def mod_rewrite_config(rules):
 	# HTTPS configuration
 	f = re.split("\n", rules)
 	if 'https' in f[4]:
-		# Get cert
 		domain = args.myDomain
 		# Enable HTTPS
 		print '\n' + T + '[*]' + W + ' Enabling HTTPS...\n'
@@ -346,7 +289,6 @@ if __name__ == "__main__":
                     ' [y/N] ')
 
 		if configure == 'y':
-			get_apache()
 			mod_rewrite_config(rules)
 			write_rules(rules)
 		else:
