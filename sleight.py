@@ -167,6 +167,7 @@ def get_apache():
             sys.exit((R + '[!]' + W + ' Exiting. Apache' +
                      ' not installed.'))
 
+"""
 def get_https_cert():
 
     # Generate HTTPS certificate
@@ -204,7 +205,7 @@ def get_https_cert():
     	+ T + str(domain) + W + ' successfully generated.'
 
     return domain
-
+"""
 def mod_rewrite_config(rules):
 
 	# Backup Apache config file
@@ -230,7 +231,7 @@ def mod_rewrite_config(rules):
 	f = re.split("\n", rules)
 	if 'https' in f[4]:
 		# Get cert
-		domain = get_https_cert()
+		domain = args.myDomain
 		# Enable HTTPS
 		print '\n' + T + '[*]' + W + ' Enabling HTTPS...\n'
 		subprocess.call(['a2enmod', 'ssl'])
